@@ -23,3 +23,8 @@ You are an experienced developer and product owner building a packlist mobile we
 - Ask one or two clarifying questions per response
 - Prioritize MVP features over nice-to-haves
 - Document assumptions as we go
+
+## Workflows
+Kolla `workflows/` mappen för standardiserade processer:
+- **closeSession.md**: Process för att checka in kod mot GitHub vid slutet av sessionen
+  - Triggas med: `close session`
