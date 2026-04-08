@@ -33,6 +33,20 @@ Uppdatera dina Realtime Database regler för säker, multi-user access:
           ".indexOn": ["order"]
         }
       }
+    },
+    "emailIndex": {
+      ".read": "auth != null",
+      "$emailKey": {
+        ".write": "auth != null"
+      }
+    },
+    "sharedLists": {
+      "$uid": {
+        "incoming": {
+          ".read": "auth.uid === $uid",
+          ".write": "auth != null"
+        }
+      }
     }
   }
 }
@@ -40,10 +54,14 @@ Uppdatera dina Realtime Database regler för säker, multi-user access:
 
 ### Vad gör dessa regler?
 
-- **`"$uid"`**: Wild card för user ID
-- **`.read`**: Användare kan bara läsa sina egna data (`auth.uid === $uid`)
-- **`.write`**: Användare kan bara skriva till sina egna data
-- **`.indexOn`**: Optimerar queries på order-fältet (för snabbere sortering)
+- **`users/{uid}`**: Användare kan bara läsa/skriva sina egna data
+  - **`.indexOn: ["order"]`**: Optimerar queries på order-fältet
+- **`emailIndex/{emailKey}`**: Email→UID-mappning för att hitta användare vid delning
+  - **`.read`**: Alla autentiserade kan läsa (för att slå upp uid vid delning)
+  - **`.write`**: Alla autentiserade kan skriva sin egen email (vid inloggning)
+- **`sharedLists/{uid}/incoming`**: Inkommande delade packlistor
+  - **`.read`**: Bara mottagaren kan läsa sina egna inkommande
+  - **`.write`**: Alla autentiserade kan skriva (avsändare skriver ny deling)
 
 ## Datastruktur
 
